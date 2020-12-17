@@ -28,7 +28,7 @@ public class Heist implements Serializable {
     private Integer mastermind;
 
     @Column(name = "Score")
-    private Float score;
+    private String score;
 
     @Column(name = "Start_Timestamp", nullable = false)
     private LocalDateTime startTimestamp;
@@ -84,12 +84,12 @@ public class Heist implements Serializable {
         return mastermind;
     }
 
-    public Heist setScore(Float score) {
+    public Heist setScore(String score) {
         this.score = score;
         return this;
     }
 
-    public Float getScore() {
+    public String getScore() {
         return score;
     }
 

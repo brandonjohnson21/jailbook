@@ -85,7 +85,7 @@ CREATE TABLE Heist (
     Start_Timestamp TIMESTAMP NOT NULL,
     Close_Timestamp TIMESTAMP,
     Target VARCHAR(255),
-    Score FLOAT,
+    Score VARCHAR(255),
     PRIMARY KEY (Heist_ID),
     FOREIGN KEY (Mastermind) REFERENCES Criminal (Criminal_ID)
 );
