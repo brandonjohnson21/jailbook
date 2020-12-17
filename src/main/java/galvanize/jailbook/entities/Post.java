@@ -1,8 +1,11 @@
 package galvanize.jailbook.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "Post")
@@ -10,7 +13,7 @@ public class Post implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "Category", nullable = false)
+    @Column(name = "Category", nullable = true)
     private String category;
 
     @Column(name = "Criminal_ID", nullable = false)
@@ -29,6 +32,44 @@ public class Post implements Serializable {
 
     @Column(name = "Upvote_Count", nullable = false)
     private Integer upvoteCount;
+
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<CommentPost> commentPost;
+
+    public List<CommentPost> getCommentPost() {
+        return commentPost;
+    }
+    ///////////CONSTRUCTOR///////////////
+
+    public Post() {
+        this.upvoteCount = 0;
+        //LocalDateTime date = new LocalDateTime();
+        this.postTimestamp = LocalDateTime.now();
+    }
+
+    public Post(Integer criminalId, String postText) {
+        this.criminalId = criminalId;
+        this.postText = postText;
+        this.upvoteCount = 0;
+        this.postTimestamp = LocalDateTime.now();
+    }
+
+    public Post(Integer criminalId, String postText, String category) {
+        this.category = category;
+        this.criminalId = criminalId;
+        this.postText = postText;
+        this.upvoteCount = 0;
+        this.postTimestamp = LocalDateTime.now();
+    }
+
+
+    ////////Gs and Ss/////////////////////
+
+    public Post setCommentPost(CommentPost commentPost) {
+        this.commentPost.add(commentPost);
+        return this;
+    }
 
     public Post setCategory(String category) {
         this.category = category;

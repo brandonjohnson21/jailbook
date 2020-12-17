@@ -5,5 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface PostRepository extends CrudRepository<Post, Integer>, JpaSpecificationExecutor<Post> {
+    Iterable<Post> findByCategoryNotNull();
 
 }

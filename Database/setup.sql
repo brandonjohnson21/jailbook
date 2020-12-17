@@ -85,7 +85,7 @@ CREATE TABLE Heist (
     Start_Timestamp TIMESTAMP NOT NULL,
     Close_Timestamp TIMESTAMP,
     Target VARCHAR(255),
-    Score FLOAT,
+    Score VARCHAR(255),
     PRIMARY KEY (Heist_ID),
     FOREIGN KEY (Mastermind) REFERENCES Criminal (Criminal_ID)
 );
@@ -129,11 +129,11 @@ CREATE TABLE Heist_Item (
 );
 
 CREATE TABLE Post (
-    Post_ID INT NOT NULL AUTO_INCREMENT,
+    Post_ID INT AUTO_INCREMENT,
     Criminal_ID INT NOT NULL,
-    Upvote_Count INT NOT NULL,
+    Upvote_Count INT,
     Post_Text VARCHAR(255) NOT NULL,
-    Category VARCHAR(255) NOT NULL,
+    Category VARCHAR(255),
     Post_Timestamp TIMESTAMP NOT NULL,
     PRIMARY KEY (Post_ID),
     FOREIGN KEY (Criminal_ID) REFERENCES Criminal (Criminal_ID)
@@ -144,7 +144,7 @@ CREATE TABLE Comment_Post (
     Post_ID INT NOT NULL,
     Criminal_ID INT NOT NULL,
     Comment_Text VARCHAR(255) NOT NULL,
-    Upvote_Count INT NOT NULL,
+    Upvote_Count INT,
     Comment_Timestamp TIMESTAMP NOT NULL,
     PRIMARY KEY (Comment_Post_ID),
     FOREIGN KEY (Post_ID) REFERENCES Post (Post_ID),

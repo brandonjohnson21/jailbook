@@ -1,5 +1,7 @@
 package galvanize.jailbook.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,12 +26,31 @@ public class CommentPost implements Serializable {
     @Column(name = "Criminal_ID", nullable = false)
     private Integer criminalId;
 
-    @Column(name = "Post_ID", nullable = false)
-    private Integer postId;
-
     @Column(name = "Upvote_Count", nullable = false)
     private Integer upvoteCount;
 
+    @ManyToOne
+    @JoinColumn(name="post_id")
+    @JsonBackReference
+    private Post post;
+
+    //////////CONSTRUCTORS////////////
+
+
+    public CommentPost() {
+        this.upvoteCount = 0;
+        this.commentTimestamp = LocalDateTime.now();
+    }
+
+    public CommentPost(Integer criminalId, String commentText, Post post) {
+        this.commentText = commentText;
+        this.criminalId = criminalId;
+        this.upvoteCount = 0;
+        this.commentTimestamp = LocalDateTime.now();
+        this.post = post;
+    }
+
+    ////////Gs and Ss/////////////////////
     public CommentPost setCommentPostId(Integer commentPostId) {
         this.commentPostId = commentPostId;
         return this;
@@ -66,14 +87,6 @@ public class CommentPost implements Serializable {
         return criminalId;
     }
 
-    public CommentPost setPostId(Integer postId) {
-        this.postId = postId;
-        return this;
-    }
-
-    public Integer getPostId() {
-        return postId;
-    }
 
     public CommentPost setUpvoteCount(Integer upvoteCount) {
         this.upvoteCount = upvoteCount;
@@ -91,7 +104,6 @@ public class CommentPost implements Serializable {
                "commentText=" + commentText + '\'' +
                "commentTimestamp=" + commentTimestamp + '\'' +
                "criminalId=" + criminalId + '\'' +
-               "postId=" + postId + '\'' +
                "upvoteCount=" + upvoteCount + '\'' +
                '}';
     }
