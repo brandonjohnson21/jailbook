@@ -75,14 +75,14 @@ public class CrimeBeatControllerTest {
 
         this.mvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0]id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.[0]postId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.[0]criminalId", equalTo(1)))
                 .andExpect(jsonPath("$.[0]postText", equalTo("evilCorp hacked again....")))
                 .andExpect(jsonPath("$.[0]category", equalTo("Hackathon")))
-                .andExpect(jsonPath("$.[1]id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.[1]postId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.[1]criminalId", equalTo(2)))
                 .andExpect(jsonPath("$.[1]postText", equalTo("Fun outing last night at the Wells Fargo!")))
-                .andExpect(jsonPath("$.[2]id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.[2]postId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.[2]criminalId", equalTo(6)))
                 .andExpect(jsonPath("$.[2]postText", equalTo("Looking for something to murder..?")));
 
@@ -94,14 +94,14 @@ public class CrimeBeatControllerTest {
     @Rollback
     public void postNewsFeedItem() throws Exception {
 
-        HashMap<String, Object> newpost = new HashMap<String, Object>(){
+        HashMap<String, Object> newPost = new HashMap<String, Object>(){
             {
                 put("criminalId","10");
                 put("postText","The cops are blockin' again");
             }
         };
 
-        String json = objMap.writeValueAsString(newpost);
+        String json = objMap.writeValueAsString(newPost);
 
         req = post("/beat/new")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,9 +109,9 @@ public class CrimeBeatControllerTest {
 
         this.mvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.postId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.criminalId", equalTo(10)))
-                .andExpect(jsonPath("$.beatText", equalTo("The cops are blockin' again")));
+                .andExpect(jsonPath("$.postText", equalTo("The cops are blockin' again")));
 
 
 
@@ -122,7 +122,7 @@ public class CrimeBeatControllerTest {
     @Rollback
     public void categorizePostedNewsItem() throws Exception {
 
-        HashMap<String, Object> newpost = new HashMap<String, Object>(){
+        HashMap<String, Object> newPost = new HashMap<String, Object>(){
             {
                 put("criminalId","666");
                 put("postText","Protest happening tonight against protesting! All Call for some serious looting!");
@@ -130,7 +130,7 @@ public class CrimeBeatControllerTest {
             }
         };
 
-        String json = objMap.writeValueAsString(newpost);
+        String json = objMap.writeValueAsString(newPost);
 
         req = post("/beat/new")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -216,21 +216,27 @@ public class CrimeBeatControllerTest {
 
     //Comments Viewable on post
     @Test
-
+//    @Transactional
+//    @Rollback
     public void canSeeCommentsOnPost() throws Exception {
         Optional<Post> postGetter = repository.findById(msgID);
 
-        postGetter.ifPresent(post -> testPost = post);
+        if (postGetter.isPresent()) {
+            Post updatePost = postGetter.get();
+            CommentPost comment = new CommentPost(666,"This was the most fun I've had since I road in the smart car getaway vehicle with the idiot",updatePost);
+            comment.setPost(updatePost);
+            comment = commentRepo.save(comment);
 
-        commentRepo.save(new CommentPost(666,"This was the most fun I've had since I road in the smart car getaway vehicle with the idiot",testPost));
-
+            updatePost.setCommentPost(comment);
+            repository.save(updatePost);
+        }
 
         req = get("/beat/feed")
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(req)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0]comment",hasSize(1)));
+                .andExpect(jsonPath("$.[0]commentPost",hasSize(1)));
                 //.andExpect(jsonPath($.));
 
 

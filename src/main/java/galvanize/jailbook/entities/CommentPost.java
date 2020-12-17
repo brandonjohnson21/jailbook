@@ -1,6 +1,7 @@
 package galvanize.jailbook.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,13 +9,14 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Comment_Post")
-public class CommentPost implements Serializable {
 
+public class CommentPost implements Serializable {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Comment_Post_ID", nullable = false)
+    @Column(name = "Comment_Post_ID")
     private Integer commentPostId;
 
     @Column(name = "Comment_Text", nullable = false)
@@ -32,6 +34,7 @@ public class CommentPost implements Serializable {
     @ManyToOne
     @JoinColumn(name="post_id")
     @JsonBackReference
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Post post;
 
     //////////CONSTRUCTORS////////////
@@ -51,6 +54,17 @@ public class CommentPost implements Serializable {
     }
 
     ////////Gs and Ss/////////////////////
+
+
+    public Post getPost() {
+        return post;
+    }
+
+    public CommentPost setPost(Post post) {
+        this.post = post;
+        return this;
+    }
+
     public CommentPost setCommentPostId(Integer commentPostId) {
         this.commentPostId = commentPostId;
         return this;

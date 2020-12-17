@@ -45,14 +45,17 @@ public class CrimeBeatController {
     }
 
     @PostMapping("/beat/comment/{id}")
-    public void commentOnPost(@PathVariable int id, @RequestBody CommentPost comment){
-        Optional<Post> Post = repository.findById(id);
-        if (Post.isPresent()) {
-            Post updatePost = Post.get();
+    public Post commentOnPost(@PathVariable int id, @RequestBody CommentPost comment){
+        Optional<Post> post = repository.findById(id);
+
+        if (post.isPresent()) {
+            Post updatePost = post.get();
+            comment.setPost(updatePost);
 
             updatePost.setCommentPost(comment);
-            repository.save(updatePost);
+            return repository.save(updatePost);
         }
+        return new Post();
 
     }
 }

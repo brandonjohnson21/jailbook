@@ -1,5 +1,6 @@
 package galvanize.jailbook.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Post")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Post implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,13 +35,11 @@ public class Post implements Serializable {
     @Column(name = "Upvote_Count", nullable = false)
     private Integer upvoteCount;
 
-    @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<CommentPost> commentPost;
 
-    public List<CommentPost> getCommentPost() {
-        return commentPost;
-    }
+
     ///////////CONSTRUCTOR///////////////
 
     public Post() {
@@ -66,6 +66,9 @@ public class Post implements Serializable {
 
     ////////Gs and Ss/////////////////////
 
+    public List<CommentPost> getCommentPost() {
+        return commentPost;
+    }
     public Post setCommentPost(CommentPost commentPost) {
         this.commentPost.add(commentPost);
         return this;

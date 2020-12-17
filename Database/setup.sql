@@ -129,7 +129,7 @@ CREATE TABLE Heist_Item (
 );
 
 CREATE TABLE Post (
-    Post_ID INT AUTO_INCREMENT,
+    Post_ID INT NOT NULL AUTO_INCREMENT,
     Criminal_ID INT NOT NULL,
     Upvote_Count INT,
     Post_Text VARCHAR(255) NOT NULL,
