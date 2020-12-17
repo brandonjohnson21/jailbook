@@ -1,9 +1,9 @@
 package galvanize.jailbook.repositories;
 
-import com.example.demo.profile.entities.HeistItem;
-import org.springframework.data.jpa.repository.JpaRepository;
+import galvanize.jailbook.entities.HeistItem;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface HeistItemRepository extends JpaRepository<HeistItem, Integer>, JpaSpecificationExecutor<HeistItem> {
+public interface HeistItemRepository extends CrudRepository<HeistItem, Integer>, JpaSpecificationExecutor<HeistItem> {
 
 }

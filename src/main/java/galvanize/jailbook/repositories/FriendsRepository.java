@@ -1,9 +1,9 @@
 package galvanize.jailbook.repositories;
 
-import com.example.demo.profile.entities.Friends;
-import org.springframework.data.jpa.repository.JpaRepository;
+import galvanize.jailbook.entities.Friends;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface FriendsRepository extends JpaRepository<Friends, Integer>, JpaSpecificationExecutor<Friends> {
+public interface FriendsRepository extends CrudRepository<Friends, Integer>, JpaSpecificationExecutor<Friends> {
 
 }

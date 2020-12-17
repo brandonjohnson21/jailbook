@@ -1,17 +1,16 @@
 package galvanize.jailbook.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import galvanize.jailbook.entities.idclasses.HeistPositionIdClass;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "Heist_Position")
+@IdClass(HeistPositionIdClass.class)
 public class HeistPosition implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     @Id
     @Column(name = "Criminal_ID", nullable = false)
     private Integer criminalId;

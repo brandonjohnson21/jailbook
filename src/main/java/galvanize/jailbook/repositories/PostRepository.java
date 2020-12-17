@@ -1,9 +1,9 @@
 package galvanize.jailbook.repositories;
 
-import com.example.demo.profile.entities.Post;
-import org.springframework.data.jpa.repository.JpaRepository;
+import galvanize.jailbook.entities.Post;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecificationExecutor<Post> {
+public interface PostRepository extends CrudRepository<Post, Integer>, JpaSpecificationExecutor<Post> {
 
 }

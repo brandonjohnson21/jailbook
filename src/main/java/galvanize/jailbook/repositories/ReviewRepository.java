@@ -1,9 +1,9 @@
 package galvanize.jailbook.repositories;
 
-import com.example.demo.profile.entities.Review;
-import org.springframework.data.jpa.repository.JpaRepository;
+import galvanize.jailbook.entities.Review;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface ReviewRepository extends JpaRepository<Review, Integer>, JpaSpecificationExecutor<Review> {
+public interface ReviewRepository extends CrudRepository<Review, Integer>, JpaSpecificationExecutor<Review> {
 
 }

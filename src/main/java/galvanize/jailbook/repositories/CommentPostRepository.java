@@ -1,9 +1,9 @@
 package galvanize.jailbook.repositories;
 
-import com.example.demo.profile.entities.CommentPost;
-import org.springframework.data.jpa.repository.JpaRepository;
+import galvanize.jailbook.entities.CommentPost;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.CrudRepository;
 
-public interface CommentPostRepository extends JpaRepository<CommentPost, Integer>, JpaSpecificationExecutor<CommentPost> {
+public interface CommentPostRepository extends CrudRepository<CommentPost, Integer>, JpaSpecificationExecutor<CommentPost> {
 
 }

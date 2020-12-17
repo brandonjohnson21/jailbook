@@ -1,9 +1,9 @@
 package galvanize.jailbook.repositories;
 
-import com.example.demo.profile.entities.CriminalPosition;
-import org.springframework.data.jpa.repository.JpaRepository;
+import galvanize.jailbook.entities.CriminalPosition;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface CriminalPositionRepository extends JpaRepository<CriminalPosition, Integer>, JpaSpecificationExecutor<CriminalPosition> {
+public interface CriminalPositionRepository extends CrudRepository<CriminalPosition, Integer>, JpaSpecificationExecutor<CriminalPosition> {
 
 }

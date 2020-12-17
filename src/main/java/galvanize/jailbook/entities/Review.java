@@ -1,13 +1,13 @@
 package galvanize.jailbook.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import galvanize.jailbook.entities.idclasses.ReviewIdClass;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "Review")
+@IdClass(ReviewIdClass.class)
 public class Review implements Serializable {
 
     private static final long serialVersionUID = 1L;
