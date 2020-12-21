@@ -9,7 +9,7 @@ import galvanize.jailbook.repositories.PositionRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
+@CrossOrigin
 @RestController
 @RequestMapping("latestHits/position")
 public class HeistPositionController {
@@ -43,5 +43,11 @@ public class HeistPositionController {
 
     @PostMapping("")
     public Position create(@RequestBody Position heistRole) {return this.positionRepo.save(heistRole);}
+
+    @PatchMapping("")
+    public Position patch(@RequestBody Position heistRole) {return this.positionRepo.save(heistRole);}
+
+    @PutMapping("")
+    public Position put(@RequestBody Position heistRole) {return this.positionRepo.save(heistRole);}
 
 }

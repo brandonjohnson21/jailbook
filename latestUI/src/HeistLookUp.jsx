@@ -6,15 +6,15 @@ class HeistLookup extends React.Component {
         this.state = {
             modify: true,
             showUpdate: false,
-            heistId: this.props.results[0].heistId,
-            heistDescription: this.props.results[0].heistDescription,
-            location: this.props.results[0].location,
-            mastermind: this.props.results[0].mastermind,
-            score: this.props.results[0].score,
-            startTimestamp: this.props.results[0].startTimestamp,
-            target: this.props.results[0].target,
-            title: this.props.results[0].title,
-            closeTimestamp: this.props.results[0].closeTimestamp,
+            heistId: this.props.results.heistId,
+            heistDescription: this.props.results.heistDescription,
+            location: this.props.results.location,
+            mastermind: this.props.results.mastermind,
+            score: this.props.results.score,
+            startTimestamp: this.props.results.startTimestamp,
+            target: this.props.results.target,
+            title: this.props.results.title,
+            closeTimestamp: this.props.results.closeTimestamp,
         }
     }
 
@@ -64,7 +64,7 @@ class HeistLookup extends React.Component {
             target: this.state.target,
             title: this.state.title
         }
-        this.props.updateUser(body);
+        this.props.updateHeist(body);
     }
     handleUpdateMode = (e) => {
         this.setState({ modify: !this.state.modify})
@@ -101,7 +101,7 @@ class HeistLookup extends React.Component {
 
                     <div class="form-group">
                         <label for="Description">Description</label>
-                        <textarea rows="3" class="form-control" id="description" aria-describedby="Description"  placeholder={this.stat.heistDescription} onChange={this.handleChangeDescription}disabled={this.state.modify}></textarea>
+                        <textarea rows="3" class="form-control" id="description" aria-describedby="Description"  placeholder={this.state.heistDescription} onChange={this.handleChangeDescription}disabled={this.state.modify}></textarea>
                     </div>
 
 

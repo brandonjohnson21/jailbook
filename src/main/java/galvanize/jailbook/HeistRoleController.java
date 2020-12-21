@@ -6,7 +6,7 @@ import galvanize.jailbook.repositories.HeistRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
+@CrossOrigin
 @RestController
 @RequestMapping("latestHits/heistPosition")
 public class HeistRoleController {

@@ -34,12 +34,14 @@ class CreateHeist extends React.Component {
         this.setState({ score: e.target.value });
     }
     handleChangeStartDate = (e) => { //in use
+        let temp = ""
         this.setState({ startdate: e.target.value });
-        this.setState({ startTimestamp: this.state.startdate + "T" + this.state.starttime });
+        this.setState({ startTimestamp: temp.concat(this.state.startdate,"T",this.state.starttime)});;
     }
     handleChangeStartTime = (e) => {//in use
+        let temp = ""
         this.setState({ starttime: e.target.value });
-        this.setState({ startTimestamp: this.state.startdate + "T" + this.state.starttime });;
+        this.setState({ startTimestamp: temp.concat(this.state.startdate,"T",this.state.starttime,"0")});;
     }
     handleChangeScore = (e) => {//in use
         this.setState({ score: e.target.value });
@@ -56,10 +58,10 @@ class CreateHeist extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         let body = {
-            heistId: this.state.heistId,
+            heistId: parseInt(this.state.heistId),
             heistDescription: this.state.heistDescription,
             location: this.state.location,
-            mastermind: this.state.mastermind,
+            mastermind: parseInt(this.state.mastermind),
             score: this.state.score,
             startTimestamp: this.state.startTimestamp,
             closeTimestamp: this.state.closeTimestamp,
@@ -109,7 +111,7 @@ class CreateHeist extends React.Component {
                         <input type="text" class="form-control" id="startDate" aria-describedby="startDate" placeholder="YYYY-MM-DD" onChange={this.handleChangeStartDate}></input>
 
                         <label for="startTime">Start Time</label>
-                        <input type="text" class="form-control" id="startTime" aria-describedby="startTime" placeholder="HH:MM:SS" onChange={this.handleChangeStartTime}></input>
+                        <input type="text" class="form-control" id="startTime" aria-describedby="startTime" placeholder="HH:MM" onChange={this.handleChangeStartTime}></input>
 
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>

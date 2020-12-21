@@ -33,9 +33,6 @@ class App extends React.Component {
             .then(response => {
                 this.setState({ createHeistStatus: response.status })
                 this.setState({ post: response })
-            }).catch(e => {
-                this.setState({ createHeistStatus: e.status })
-                this.setState({ post: e })
             })
     }
 
@@ -84,7 +81,7 @@ class App extends React.Component {
         this.setState({ registerUpdateStatus: 0 })
         let link = document.getElementById("Register")
         link.classList.remove("active")
-        let searchString = `http://localhost:3002/api/v1/users/user/${document.getElementById("search").value}`
+        let searchString = `http://localhost:8080/latestHits/heist/${document.getElementById("search").value}`
         const response = await fetch(searchString)
             .then(response => {
                 this.setState({ searchResultsStatus: response.status })
@@ -141,7 +138,7 @@ class App extends React.Component {
 
                         {this.state.createHeistStatus === 200 ?
                             <div class="alert alert-success" role="alert">
-                                The heist was added successfully! Someone is gonna get rich!
+                                The heist was added successfully! Someone gonna get rich!
                           </div> :
                             <div></div>}
 

@@ -5,7 +5,7 @@ import galvanize.jailbook.repositories.HeistRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
+@CrossOrigin
 @RestController
 @RequestMapping("latestHits/heist")
 public class HeistController {
@@ -44,6 +44,17 @@ public class HeistController {
     public Heist create(@RequestBody Heist heist) {
         return this.heistRepo.save(heist);
     }
+
+    @PutMapping("")
+    public Heist put(@RequestBody Heist heist) {
+        return this.heistRepo.save(heist);
+    }
+
+    @PatchMapping("")
+    public Heist patch(@RequestBody Heist heist) {
+        return this.heistRepo.save(heist);
+    }
+
     @GetMapping("/{id}")
     public Heist getByID(@PathVariable Integer id){
         return this.heistRepo.findByHeistId(id);
