@@ -27,7 +27,7 @@ class NewBeat extends React.Component{
             })
         }
         console.log(req);
-        let response = await fetch(`${api}/new`,req);
+         await fetch(`${api}/new`,req);
                         
 
     }
@@ -35,9 +35,10 @@ class NewBeat extends React.Component{
     render(){
         return(
             <div>
-            <form>
+            <form>  <br/>
                     <label>Say something:</label> <textarea rows="1" cols="80" onChange={this.handleChange}></textarea>
                     <button onClick={this.handleSubmit.bind(this)}>Post</button>
+                    <br />
                 </form>
             </div>
         )
