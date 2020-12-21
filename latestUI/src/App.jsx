@@ -1,17 +1,18 @@
 import './App.css';
 import React from 'react'
-import RegisterUser from './RegisterUser'
-import FindUser from './FindUser'
+import CreateHeist from './CreateHeist'
+import HeistLookUp from './HeistLookUp'
 
 class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             post: {},
+            postPresend: {},
             searchResults: {},
-            registerUser: true,
-            registerUserStatus: 0,
-            registerUpdateStatus: 0,
+            createHeist: true,
+            createHeistStatus: 0,
+            heistUpdateStatus: 0,
             registerUserName: '',
             registerUserID: 0,
             showSearch: false,
@@ -20,34 +21,36 @@ class App extends React.Component {
         }
     }
 
-    addUser = (rbody) => {
+    addHeist = (rbody) => {
         this.handleRegisterToggle()
-
+        this.setState({ postPresend: rbody })
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rbody)
         };
-        fetch('http://localhost:3002/api/v1/users/user', requestOptions)
+        fetch('http://localhost:8080/latestHits/heist', requestOptions)
             .then(response => {
-                this.setState({ registerUserStatus: response.status })
+                this.setState({ createHeistStatus: response.status })
                 this.setState({ post: response })
-
+            }).catch(e => {
+                this.setState({ createHeistStatus: e.status })
+                this.setState({ post: e })
             })
     }
 
 
 
-    updateUser = (rbody) => {
+    updateHeist = (rbody) => {
         this.handleUpdateToggle()
         const requestOptions = {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rbody)
         };
-        fetch('http://localhost:3002/api/v1/users/user', requestOptions)
+        fetch('http://localhost:8080/latestHits/heist', requestOptions)
             .then(response => {
-                this.setState({ registerUpdateStatus: response.status })
+                this.setState({ heistUpdateStatus: response.status })
                 this.setState({ post: response })
 
             })
@@ -55,15 +58,15 @@ class App extends React.Component {
 
     handleRegisterToggle = () => {
         let link = document.getElementById("Register")
-        this.setState({ registerUserStatus: 0 })
-        this.setState({ registerUpdateStatus: 0 })
+        this.setState({ createHeistStatus: 0 })
+        this.setState({ heistUpdateStatus: 0 })
 
         this.setState({ showSearch: false })
-        if (this.state.registerUser) {
-            this.setState({ registerUser: !this.state.registerUser })
+        if (this.state.createHeist) {
+            this.setState({ createHeist: !this.state.createHeist })
             link.classList.remove("active")
         } else {
-            this.setState({ registerUser: !this.state.registerUser })
+            this.setState({ createHeist: !this.state.createHeist })
             link.classList.add("active")
         }
     }
@@ -71,7 +74,7 @@ class App extends React.Component {
 
     handleUpdateToggle = () => {
         let link = document.getElementById("Register")
-        this.setState({ registerUserStatus: 0 })
+        this.setState({ createHeistStatus: 0 })
         this.setState({ showSearch: false })
     }
 
@@ -85,15 +88,15 @@ class App extends React.Component {
         const response = await fetch(searchString)
             .then(response => {
                 this.setState({ searchResultsStatus: response.status })
-                this.setState({ registerUser: false })
+                this.setState({ createHeist: false })
                 return response
             }).catch(response => {
                 this.setState({ searchResultsStatus: response.status })
-                this.setState({ registerUser: false })
+                this.setState({ createHeist: false })
                 return response
             })
         const json = await response.json()
-        this.setState({ registerUser: false })
+        this.setState({ createHeist: false })
         this.setState({ results: json })
         this.setState({ showSearch: true })
     }
@@ -104,7 +107,7 @@ class App extends React.Component {
             <div className="App">
 
                 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-                    <a class="navbar-brand" href="#">Account  Manager</a>
+                    <a class="navbar-brand" href="#">Latest Hits</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
                         aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -116,22 +119,11 @@ class App extends React.Component {
                                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                             </li> */}
                             <li class="nav-item">
-                                <a class="nav-link active" id="Register" onClick={this.handleRegisterToggle} href="#">Register</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">Admin Actions</a>
-                                <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                    <a class="dropdown-item" href="#">View All Users</a>
-                                    <a class="dropdown-item" href="#">View All Active Users</a>
-                                    <a class="dropdown-item" href="#">View All Relationships</a>
-                                    <a class="dropdown-item" href="#">Delete User</a>
-                                    <a class="dropdown-item" href="#">Delete Relation</a>
-                                </div>
+                                <a class="nav-link active" id="Register" onClick={this.handleRegisterToggle} href="#">Create</a>
                             </li>
                         </ul>
                         <form class="form-inline my-2 my-lg-0">
-                            <input class="form-control mr-sm-2" type="text" id="search" placeholder="Search Users (by ID)" aria-label="Search"></input>
+                            <input class="form-control mr-sm-2" type="text" id="search" placeholder="Search Heists (by ID)" aria-label="Search"></input>
                             <button class="btn btn-secondary my-2 my-sm-0" onClick={this.handleUserSearch.bind(this)} type="submit">Search!</button>
                         </form>
                     </div>
@@ -141,53 +133,55 @@ class App extends React.Component {
                     <div class="main-App">
                         {/* <h2>Heading </h2> */}
 
-                        {this.state.registerUserStatus === 500 ?
+                        {this.state.createHeistStatus === 500 ?
                             <div class="alert alert-danger" role="alert">
-                                A server error occurred while adding the user...
+                                A server error occurred while adding the heist... A hit was automatically generated against the developer.
                           </div> :
                             <div></div>}
 
-                        {this.state.registerUserStatus === 200 ?
+                        {this.state.createHeistStatus === 200 ?
                             <div class="alert alert-success" role="alert">
-                                The user was added successfully!
+                                The heist was added successfully! Someone is gonna get rich!
                           </div> :
                             <div></div>}
 
-                        {this.state.registerUpdateStatus === 200 ?
+                        {this.state.heistUpdateStatus === 200 ?
                             <div class="alert alert-success" role="alert">
-                                The user was updated successfully!
+                                The heist was updated successfully! 
                           </div> :
                             <div></div>}
 
-                        {this.state.registerUpdateStatus === 500 ?
+                        {this.state.heistUpdateStatus === 500 ?
                             <div class="alert alert-danger" role="alert">
-                                A server error occurred while updating the user...
+                                A server error occurred while updating the heist... A hit was automatically generated against the developer.
                           </div> :
                             <div></div>}
 
-                        {this.state.registerUpdateStatus === 404 ?
+                        {this.state.heistUpdateStatus === 404 ?
                             <div class="alert alert-danger" role="alert">
-                                An error occurred while updating the user...
+                                A server error occurred while updating the heist... A hit was automatically generated against the developer.
                           </div> :
                             <div></div>}
                         {this.state.searchResultsStatus === 400 ?
                             <div class="alert alert-warning" role="alert">
-                                The user was not found...
+                                The heist was not found...
                                                      </div> :
                             <div></div>}
 
 
 
-                        {this.state.registerUser ?
-                            <RegisterUser
-                                addUser={this.addUser}
+                        {this.state.createHeist ?
+                            <CreateHeist
+                            heistId={this.state.heistId}
+                            addHeist={this.addHeist}
+                            addRole={this.addRole}
                             /> :
                             <div></div>}
 
                         {this.state.showSearch ?
-                            <FindUser
+                            <HeistLookUp
                                 results={this.state.results}
-                                updateUser={this.updateUser} /> :
+                                updateHeist={this.updateHeist} /> :
                             <div></div>}
 
                         {/* Modify User*/}
