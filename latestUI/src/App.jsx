@@ -35,6 +35,35 @@ class App extends React.Component {
                 this.setState({ post: response })
             })
     }
+    addRole = (rbody) => {
+        this.handleRegisterToggle()
+        this.setState({ postPresend: rbody })
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(rbody)
+        };
+        fetch('http://localhost:8080/latestHits/heist', requestOptions)
+            .then(response => {
+                this.setState({ createHeistStatus: response.status })
+                this.setState({ post: response })
+            })
+    }
+
+    addItem = (rbody) => {
+        this.handleRegisterToggle()
+        this.setState({ postPresend: rbody })
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(rbody)
+        };
+        fetch('http://localhost:8080/latestHits/heist', requestOptions)
+            .then(response => {
+                this.setState({ createHeistStatus: response.status })
+                this.setState({ post: response })
+            })
+    }
 
 
 
@@ -103,7 +132,7 @@ class App extends React.Component {
         return (
             <div className="App">
 
-                <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+                <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" id="mainNav">
                     <a class="navbar-brand" href="#">Latest Hits</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
                         aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">

@@ -51,6 +51,26 @@ class HeistLookup extends React.Component {
     }
 
 
+    handleClose = (e) => {
+        e.preventDefault();
+        let body = {
+            heistId: this.state.heistId,
+            heistDescription: this.state.heistDescription,
+            location: this.state.location,
+            mastermind: this.state.mastermind,
+            score: this.state.score,
+            startTimestamp: this.state.startTimestamp,
+            closeTimestamp: new Date().toISOString(),
+            target: this.state.target,
+            title: this.state.title
+        }
+        this.props.updateHeist(body);
+    }
+    handleUpdateMode = (e) => {
+        this.setState({ modify: !this.state.modify})
+        this.setState({ showUpdate: !this.state.showUpdate})
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         let body = {
@@ -65,10 +85,6 @@ class HeistLookup extends React.Component {
             title: this.state.title
         }
         this.props.updateHeist(body);
-    }
-    handleUpdateMode = (e) => {
-        this.setState({ modify: !this.state.modify})
-        this.setState({ showUpdate: !this.state.showUpdate})
     }
 
     render() {
@@ -116,6 +132,7 @@ class HeistLookup extends React.Component {
                     <button type="button" onClick={this.handleUpdateMode} class="btn btn-warning" hidden={this.state.showUpdate}>Modify</button>
                     <button type="button" onClick={this.handleSubmit} class="btn btn-primary" hidden={!this.state.showUpdate}>Update</button>
                     <button type="button"  class="btn btn-danger padme">Delete</button>
+                    <button type="button"  onClick={this.handleClose} class="btn btn-success padme">Close</button>
                 </form>
             </div>
         );

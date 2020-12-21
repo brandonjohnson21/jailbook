@@ -55,6 +55,12 @@ public class HeistController {
         return this.heistRepo.save(heist);
     }
 
+    @DeleteMapping("")
+    public Heist del(@RequestBody Heist heist) {
+        return this.heistRepo.save(heist);
+    }
+
+
     @GetMapping("/{id}")
     public Heist getByID(@PathVariable Integer id){
         return this.heistRepo.findByHeistId(id);
