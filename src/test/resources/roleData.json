@@ -1,0 +1,9 @@
+{
+  "criminalId":4,
+  "heistId":1,
+  "positionId":2,
+  "maximumRating":10.0,
+  "minimumRating":0.0,
+  "minimumSkillLevel": 0,
+  "maximumSkillLevel": 10
+}
