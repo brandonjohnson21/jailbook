@@ -111,11 +111,12 @@ class CreateHeist extends React.Component {
                         <input type="text" class="form-control" id="startDate" aria-describedby="startDate" placeholder="YYYY-MM-DD" onChange={this.handleChangeStartDate}></input>
 
                         <label for="startTime">Start Time</label>
-                        <input type="text" class="form-control" id="startTime" aria-describedby="startTime" placeholder="HH:MM" onChange={this.handleChangeStartTime}></input>
+                        <input type="text" class="form-control" id="startTime" aria-describedby="startTime" placeholder="HH:MM:SS" onChange={this.handleChangeStartTime}></input>
 
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+                
             </div>
         )
     }
