@@ -1,0 +1,14 @@
+body {
+  padding-top: 5rem;
+}
+.main-App {
+  padding: 3rem 1.5rem;
+  text-align: left;
+}
+.form-group {
+  margin-top:10px;
+  margin-bottom: 20px;
+}
+label{
+  margin-top: 5px;
+}
