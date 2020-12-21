@@ -17,7 +17,8 @@ class App extends React.Component {
             registerUserID: 0,
             showSearch: false,
             searchResultsStatus: 0,
-            results: []
+            results: [],
+            createdHeistID: ""
         }
     }
 
@@ -35,36 +36,6 @@ class App extends React.Component {
                 this.setState({ post: response })
             })
     }
-    addRole = (rbody) => {
-        this.handleRegisterToggle()
-        this.setState({ postPresend: rbody })
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(rbody)
-        };
-        fetch('http://localhost:8080/latestHits/heist', requestOptions)
-            .then(response => {
-                this.setState({ createHeistStatus: response.status })
-                this.setState({ post: response })
-            })
-    }
-
-    addItem = (rbody) => {
-        this.handleRegisterToggle()
-        this.setState({ postPresend: rbody })
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(rbody)
-        };
-        fetch('http://localhost:8080/latestHits/heist', requestOptions)
-            .then(response => {
-                this.setState({ createHeistStatus: response.status })
-                this.setState({ post: response })
-            })
-    }
-
 
 
     updateHeist = (rbody) => {
@@ -167,7 +138,7 @@ class App extends React.Component {
 
                         {this.state.createHeistStatus === 200 ?
                             <div class="alert alert-success" role="alert">
-                                The heist was added successfully! Someone gonna get rich!
+                                The heist was added successfully!
                           </div> :
                             <div></div>}
 
