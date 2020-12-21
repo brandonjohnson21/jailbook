@@ -1,8 +1,6 @@
 package galvanize.jailbook;
 
 import galvanize.jailbook.entities.Heist;
-import galvanize.jailbook.repositories.HeistItemRepository;
-import galvanize.jailbook.repositories.HeistPositionRepository;
 import galvanize.jailbook.repositories.HeistRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,41 +27,54 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class HeistItemControllerTest {
+public class HeistPositionControllerTest {
+
     @Autowired
     MockMvc mvc;
 
     @Autowired
-    HeistItemRepository heistItemRepo;
+    HeistRepository heistRepo;
 
     @Test
-    public void testCreateItem() throws Exception {
-        String json = getJSON("/itemData.json");
-        MockHttpServletRequestBuilder request = post("/latestHits/heistItem")
+    public void testCreateHeist() throws Exception {
+
+        String json = getJSON("/positionData.json");
+
+        MockHttpServletRequestBuilder request = post("/latestHits/position")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
+
         this.mvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.itemName", equalTo("E-11")));
+                .andExpect(jsonPath("$.positionName", equalTo("Storm Trooper")));
     }
 
 
     @Test
-    public void getByHeistId() throws Exception {
-        MockHttpServletRequestBuilder request = get("/latestHits/heistItem?heistId=1")
+    public void getPositionByName() throws Exception {
+        MockHttpServletRequestBuilder request = get("/latestHits/position?positionName=Storm")
                 .contentType(MediaType.APPLICATION_JSON);
         this.mvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].heistId", equalTo(1)));
+                .andExpect(jsonPath("$[0].positionName",  equalTo("Storm Trooper")));
     }
 
     @Test
-    public void getByBringerID() throws Exception {
-        MockHttpServletRequestBuilder request = get("/latestHits/heistItem?bringer=4")
+    public void getPositionByDescription() throws Exception {
+        MockHttpServletRequestBuilder request = get("/latestHits/position?positionDescription=Main")
                 .contentType(MediaType.APPLICATION_JSON);
         this.mvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].bringer", equalTo(4)));
+                .andExpect(jsonPath("$[0].positionDescription",  equalTo("Main Forces")));
+    }
+
+    @Test
+    public void getByIDTest() throws Exception {
+        MockHttpServletRequestBuilder request = get("/latestHits/position/1")
+                .contentType(MediaType.APPLICATION_JSON);
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.positionId",  equalTo(1)));
     }
 
     private String getJSON(String path) throws Exception {
