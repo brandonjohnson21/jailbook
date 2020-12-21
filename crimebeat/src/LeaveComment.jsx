@@ -26,9 +26,9 @@ class LeaveComment extends React.Component{
                 commentText: `${this.state.commentText}`
             })
         }
-        console.log(req);
-        console.log("POSTID: "+this.props.postId)
+       
         await fetch(`${api}/comment/${this.props.postId}`,req);
+        this.props.getPosts();
 
     }
     render(){

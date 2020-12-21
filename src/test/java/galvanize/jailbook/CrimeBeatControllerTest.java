@@ -3,9 +3,12 @@ package galvanize.jailbook;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import galvanize.jailbook.entities.CommentPost;
+import galvanize.jailbook.entities.Criminal;
 import galvanize.jailbook.entities.Post;
 import galvanize.jailbook.repositories.CommentPostRepository;
+import galvanize.jailbook.repositories.CriminalRepository;
 import galvanize.jailbook.repositories.PostRepository;
+import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -34,6 +41,8 @@ public class CrimeBeatControllerTest {
 
     ObjectMapper objMap = new ObjectMapper();
     MockHttpServletRequestBuilder req;
+    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    ArrayList<Integer> ids = new ArrayList<Integer>();
     //will set this so I have a usable msgID for tests as the database increments its indexes
     int msgID;
     //used for testing Beat responses
@@ -45,6 +54,8 @@ public class CrimeBeatControllerTest {
     PostRepository repository;
     @Autowired
     CommentPostRepository commentRepo;
+    @Autowired
+    CriminalRepository criminalRepo;
 
     @BeforeEach
     @Transactional
@@ -52,9 +63,28 @@ public class CrimeBeatControllerTest {
     void init() throws JsonProcessingException {
     //Seed data
 
-        repository.save(new Post(1,"evilCorp hacked again....","Hackathon"));
-        repository.save(new Post(2,"Fun outing last night at the Wells Fargo!"));
-        repository.save(new Post(6,"Looking for something to murder..?"));
+        //Create some criminals
+        ArrayList<Criminal> criminals= new ArrayList<>();
+        criminals.add(new Criminal("Mr. Pink",5,"xxxx",LocalDate.parse("2016-03-23",dateFormat),4.75F));
+        criminals.add(new Criminal("Dr. Evil",5,"xxxx",LocalDate.parse("2012-03-13",dateFormat),1.75F));
+        criminals.add(new Criminal("Morpheus",7,"xxxx",LocalDate.parse("2010-08-11",dateFormat),4.38F));
+        criminals.add(new Criminal("Mr. Bigglesworth",20,"xxxx",LocalDate.parse("2019-10-05",dateFormat),4.98F));
+        criminals.add(new Criminal("The Wet Bandit",2,"xxxx",LocalDate.parse("1991-12-26",dateFormat),2.56F));
+
+        criminalRepo.saveAll(criminals);
+
+        Iterable<Criminal> criminalsPosting = this.criminalRepo.findAll();
+
+        for (Criminal criminal : criminalsPosting) {
+               ids.add(criminal.getCriminalId());
+        }
+        Optional<Criminal> criminalLookUp = criminalRepo.findById(ids.get(0));
+        criminalLookUp.ifPresent(value -> repository.save(new Post(value, "evilCorp hacked again....", "Hackathon")));
+        criminalLookUp = criminalRepo.findById(ids.get(1));
+        criminalLookUp.ifPresent(value -> repository.save(new Post(value,"Fun outing last night at the Wells Fargo!")));
+        criminalLookUp = criminalRepo.findById(ids.get(3));
+        criminalLookUp.ifPresent(value -> repository.save(new Post(value,"Looking for something to murder..?")) );
+
         System.out.print("Global Ids used for this test: ");
         this.repository.findAll().forEach(x -> System.out.print(+x.getPostId()+ ", "));
 
@@ -76,14 +106,14 @@ public class CrimeBeatControllerTest {
         this.mvc.perform(req)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0]postId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.[0]criminalId", equalTo(1)))
+                .andExpect(jsonPath("$.[0]criminalId.criminalId",instanceOf(Number.class)))
                 .andExpect(jsonPath("$.[0]postText", equalTo("evilCorp hacked again....")))
                 .andExpect(jsonPath("$.[0]category", equalTo("Hackathon")))
                 .andExpect(jsonPath("$.[1]postId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.[1]criminalId", equalTo(2)))
+                .andExpect(jsonPath("$.[1]criminalId.criminalId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.[1]postText", equalTo("Fun outing last night at the Wells Fargo!")))
                 .andExpect(jsonPath("$.[2]postId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.[2]criminalId", equalTo(6)))
+                .andExpect(jsonPath("$.[2]criminalId.criminalId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.[2]postText", equalTo("Looking for something to murder..?")));
 
     }
@@ -96,7 +126,7 @@ public class CrimeBeatControllerTest {
 
         HashMap<String, Object> newPost = new HashMap<String, Object>(){
             {
-                put("criminalId","10");
+                put("criminalId",ids.get(0));
                 put("postText","The cops are blockin' again");
             }
         };
@@ -110,7 +140,7 @@ public class CrimeBeatControllerTest {
         this.mvc.perform(req)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.postId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.criminalId", equalTo(10)))
+                .andExpect(jsonPath("$.criminalId.criminalId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.postText", equalTo("The cops are blockin' again")));
 
 
@@ -124,7 +154,7 @@ public class CrimeBeatControllerTest {
 
         HashMap<String, Object> newPost = new HashMap<String, Object>(){
             {
-                put("criminalId","666");
+                put("criminalId",ids.get(3));
                 put("postText","Protest happening tonight against protesting! All Call for some serious looting!");
                 put("category","Protest");
             }
@@ -139,7 +169,7 @@ public class CrimeBeatControllerTest {
         this.mvc.perform(req)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.postId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.criminalId", equalTo(666)))
+                .andExpect(jsonPath("$.criminalId.criminalId", equalTo(ids.get(3))))
                 .andExpect(jsonPath("$.postText", equalTo("Protest happening tonight against protesting! All Call for some serious looting!")))
                 .andExpect(jsonPath("$.category", equalTo("Protest")));
     }
@@ -159,6 +189,24 @@ public class CrimeBeatControllerTest {
 
         upvoteTest.ifPresent(post -> testPost = post);
         assertEquals(1,testPost.getUpvoteCount(),"upvotes for post was supposed to equal 1 but did not");
+
+    }
+    //Ability to down vote a news feed item
+    @Test
+    @Transactional
+    @Rollback
+    public void downVoteNewsItem() throws Exception {
+
+        req = post("/beat/downvote/"+msgID)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(req)
+                .andExpect(status().isOk());
+
+        Optional<Post> upvoteTest = this.repository.findById(msgID);
+
+        upvoteTest.ifPresent(post -> testPost = post);
+        assertEquals(-1,testPost.getUpvoteCount(),"downvotes for post was supposed to equal 1 but did not");
 
     }
     //comment on news feed items
@@ -194,7 +242,8 @@ public class CrimeBeatControllerTest {
     @Rollback
     public void getNefariousItems() throws Exception {
 
-        repository.save(new Post(666,"Protest happening tonight against protesting! All Call for some serious looting!","Protest"));
+        Optional<Criminal> criminalLookUp = criminalRepo.findById(ids.get(4));
+        criminalLookUp.ifPresent(value -> repository.save(new Post(value,"Protest happening tonight against protesting! All Call for some serious looting!","Protest")));
 
 
         req = get("/beat/nefarious")
@@ -203,11 +252,11 @@ public class CrimeBeatControllerTest {
         this.mvc.perform(req)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0]postId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.[0]criminalId", equalTo(1)))
+                .andExpect(jsonPath("$.[0]criminalId.criminalId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.[0]postText", equalTo("evilCorp hacked again....")))
                 .andExpect(jsonPath("$.[0]category", equalTo("Hackathon")))
                 .andExpect(jsonPath("$.[1]postId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.[1]criminalId", equalTo(666)))
+                .andExpect(jsonPath("$.[1]criminalId.criminalId", instanceOf(Number.class)))
                 .andExpect(jsonPath("$.[1]postText", equalTo("Protest happening tonight against protesting! All Call for some serious looting!")))
                 .andExpect(jsonPath("$.[1]category", equalTo("Protest")))
                 .andExpect(jsonPath("$",hasSize(2)));
@@ -221,14 +270,16 @@ public class CrimeBeatControllerTest {
     public void canSeeCommentsOnPost() throws Exception {
         Optional<Post> postGetter = repository.findById(msgID);
 
+
         if (postGetter.isPresent()) {
             Post updatePost = postGetter.get();
-            CommentPost comment = new CommentPost(666,"This was the most fun I've had since I road in the smart car getaway vehicle with the idiot",updatePost);
-            comment.setPost(updatePost);
-            comment = commentRepo.save(comment);
+            Optional<Criminal> criminalLookUp = criminalRepo.findById(ids.get(4));
+            if (criminalLookUp.isPresent()) {
+                CommentPost comment = new CommentPost(criminalLookUp.get(), "This was the most fun I've had since I road in the smart car getaway vehicle with the idiot", updatePost);
+                updatePost.setCommentPost(comment);
+                repository.save(updatePost);
+            }
 
-            updatePost.setCommentPost(comment);
-            repository.save(updatePost);
         }
 
         req = get("/beat/feed")

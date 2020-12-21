@@ -1,5 +1,7 @@
 package galvanize.jailbook.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -21,6 +23,7 @@ public class Criminal implements Serializable {
     @Column(name = "Num_Years_Served")
     private Integer numYearsServed;
 
+    @JsonIgnore
     @Column(name = "Pass_Word", nullable = false)
     private String passWord;
 
@@ -34,6 +37,22 @@ public class Criminal implements Serializable {
         this.alias = alias;
         return this;
     }
+    ///Const////
+
+
+    public Criminal() {
+    }
+
+    public Criminal(String alias, Integer numYearsServed, String passWord, LocalDate prisonReleaseDate, Float rating) {
+        this.alias = alias;
+        this.numYearsServed = numYearsServed;
+        this.passWord = passWord;
+        this.prisonReleaseDate = prisonReleaseDate;
+        this.rating = rating;
+    }
+
+
+    ////G and S////
 
     public String getAlias() {
         return alias;

@@ -25,8 +25,9 @@ public class CommentPost implements Serializable {
     @Column(name = "Comment_Timestamp", nullable = false)
     private LocalDateTime commentTimestamp;
 
-    @Column(name = "Criminal_ID", nullable = false)
-    private Integer criminalId;
+    @ManyToOne
+    @JoinColumn(name="Criminal_ID", nullable=false)
+    private Criminal criminal;
 
     @Column(name = "Upvote_Count", nullable = false)
     private Integer upvoteCount;
@@ -45,9 +46,9 @@ public class CommentPost implements Serializable {
         this.commentTimestamp = LocalDateTime.now();
     }
 
-    public CommentPost(Integer criminalId, String commentText, Post post) {
+    public CommentPost(Criminal criminal, String commentText, Post post) {
         this.commentText = commentText;
-        this.criminalId = criminalId;
+        this.criminal = criminal;
         this.upvoteCount = 0;
         this.commentTimestamp = LocalDateTime.now();
         this.post = post;
@@ -92,13 +93,13 @@ public class CommentPost implements Serializable {
         return commentTimestamp;
     }
 
-    public CommentPost setCriminalId(Integer criminalId) {
-        this.criminalId = criminalId;
+    public CommentPost setCriminalId(Criminal criminal) {
+        this.criminal = criminal;
         return this;
     }
 
-    public Integer getCriminalId() {
-        return criminalId;
+    public Criminal getCriminalId() {
+        return criminal;
     }
 
 
@@ -117,7 +118,7 @@ public class CommentPost implements Serializable {
                "commentPostId=" + commentPostId + '\'' +
                "commentText=" + commentText + '\'' +
                "commentTimestamp=" + commentTimestamp + '\'' +
-               "criminalId=" + criminalId + '\'' +
+               "criminalId=" + criminal + '\'' +
                "upvoteCount=" + upvoteCount + '\'' +
                '}';
     }

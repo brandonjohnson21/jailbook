@@ -18,8 +18,9 @@ public class Post implements Serializable {
     @Column(name = "Category", nullable = true)
     private String category;
 
-    @Column(name = "Criminal_ID", nullable = false)
-    private Integer criminalId;
+    @ManyToOne
+    @JoinColumn(name="Criminal_ID", nullable=false)
+    private Criminal criminal;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,16 +49,17 @@ public class Post implements Serializable {
         this.postTimestamp = LocalDateTime.now();
     }
 
-    public Post(Integer criminalId, String postText) {
-        this.criminalId = criminalId;
+    public Post(Criminal criminal, String postText) {
+
+        this.criminal = criminal;
         this.postText = postText;
         this.upvoteCount = 0;
         this.postTimestamp = LocalDateTime.now();
     }
 
-    public Post(Integer criminalId, String postText, String category) {
+    public Post(Criminal criminal, String postText, String category) {
         this.category = category;
-        this.criminalId = criminalId;
+        this.criminal = criminal;
         this.postText = postText;
         this.upvoteCount = 0;
         this.postTimestamp = LocalDateTime.now();
@@ -69,6 +71,7 @@ public class Post implements Serializable {
     public List<CommentPost> getCommentPost() {
         return commentPost;
     }
+    //NEXT TIME I WILL USE "ADD" as the verb instead, 'set' makes not sense to me now.
     public Post setCommentPost(CommentPost commentPost) {
         this.commentPost.add(commentPost);
         return this;
@@ -83,13 +86,13 @@ public class Post implements Serializable {
         return category;
     }
 
-    public Post setCriminalId(Integer criminalId) {
-        this.criminalId = criminalId;
+    public Post setCriminalId(Criminal criminal) {
+        this.criminal = criminal;
         return this;
     }
 
-    public Integer getCriminalId() {
-        return criminalId;
+    public Criminal getCriminalId() {
+        return criminal;
     }
 
     public Post setPostId(Integer postId) {
@@ -132,7 +135,7 @@ public class Post implements Serializable {
     public String toString() {
         return "Post{" +
                "category=" + category + '\'' +
-               "criminalId=" + criminalId + '\'' +
+               "criminalId=" + criminal + '\'' +
                "postId=" + postId + '\'' +
                "postText=" + postText + '\'' +
                "postTimestamp=" + postTimestamp + '\'' +
